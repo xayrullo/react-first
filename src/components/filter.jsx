@@ -8,6 +8,7 @@ import MyInput from "./UI/my-input";
 
 const Filter = (props) => {
   const { organizations, prices, filter, setFilter } = props;
+  console.log(organizations, prices);
 
   const [organization, setOrganization] = useState("");
   const [priceType, setPriceType] = useState(1);

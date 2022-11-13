@@ -1,13 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "./utils/axios";
 
 import Filter from "./components/filter";
 import Main from "./components/main";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-
-const baseURL = "https://api.systematicdev.uz/back-api/admin/";
 
 function App() {
   const [organizations, setOrganizations] = useState([]);
@@ -17,22 +15,22 @@ function App() {
 
   async function fetchData() {
     try {
+      await axios.post(`settings/organization/get-all`).then((res) => {
+        console.log("Organizations: ", res.data);
+        setOrganizations(res.data);
+      });
       await axios
-        .post(`${baseURL}settings/organization/get-all`)
-        .then((res) => {
-          setOrganizations(res.data.data);
-        });
-      await axios
-        .post(`${baseURL}settings/price/get-paging`, {
+        .post(`settings/price/get-paging`, {
           page: 1,
           limit: 20,
           search: "",
         })
         .then((res) => {
-          setPrices(res.data.data.data);
+          console.log("res: ", res.data);
+          setPrices(res.data.data);
         });
       await axios
-        .post(`${baseURL}product/by-price/get-paging`, {
+        .post(`product/by-price/get-paging`, {
           limit: 50,
           page: 1,
           search: "",
@@ -40,7 +38,7 @@ function App() {
           sell_product_in_negative: true,
         })
         .then((res) => {
-          setProducts(res.data.data.data);
+          setProducts(res.data.data);
         });
     } catch (error) {
       console.log(error);
@@ -48,7 +46,7 @@ function App() {
   }
 
   useEffect(() => {
-    console.log("Watch filter: ", filter);
+    // console.log("Watch filter: ", filter);
   }, [filter]);
 
   useEffect(() => {
